@@ -28,7 +28,7 @@ function openPopupFromLink() {
     function onReject() {
         popup.parentNode.removeChild(popup);
     }
-    
+
     popup = createPopup(linkTitle, linkMessage, onConfirm);
     positionOfPopup(popup); //выравнивание на странице блока popup
     document.body.appendChild(popup);
@@ -51,5 +51,5 @@ function createPopup(title, message, onOk) {
 function positionOfPopup(elem) {
     elem.style.position = 'absolute';
     elem.style.top = 200 + 'px';
-    elem.style.left = Math.floor(document.body.clientWidth / 2) - 150 + 'px';
+    elem.style.left = Math.floor(document.clientWidth / 2) - 150 + 'px';
 }
