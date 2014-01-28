@@ -1,7 +1,25 @@
-body
-{
-    margin: 0;
-    padding: 0;
+body {
+  width: 700px;
+  margin: auto;
+  padding: 45px;
+  font-size: 12pt;
+}
 
-    font-size: 12px;
+.popup {
+   width:380px;
+   background-color:#FFF;
+   box-shadow: 0 0 20px black
+}
+.title {
+  height:20px;
+  font-size:120%;
+  margin: 25px;
+  font-weight: bold;
+}
+.message {
+  margin: 15px 25px;
+}
+
+.btns {
+    text-align: center;
 }
