@@ -8,14 +8,8 @@ for (i = 0; i < link.length; i++) {
     };
 }
 
-
-/**
- * Получает данные из ссылки
- * на основе этих данных создаёт попап (через createPopup) и добавляет его в DOM
- * @param {HTMLElement} link Ссылка с data-аттрибутами
- */
-
 function openPopupFromLink() {
+    //делаем проверку на существующий popup, если уже открыт то удаляем.
     if (document.getElementsByClassName('popup')[0]) {
         document.body.removeChild(document.getElementsByClassName('popup')[0]);
     }
@@ -23,18 +17,20 @@ function openPopupFromLink() {
     linkTitle = this.dataset.title;
     linkMessage = this.dataset.message;
     linkURL = this.href;
+    //заменяем символ /% на адрес сайта.
     linkMessage = linkMessage.replace(/%s/g, linkURL);
 
+    //если нажать "Да"
     function onConfirm() {
         return location.assign(linkURL);
     }
-
+    //если нажать "Нет"
     function onReject() {
         popup.parentNode.removeChild(popup);
     }
-
+    
     popup = createPopup(linkTitle, linkMessage, onConfirm);
-    positionOfPopup(popup);
+    positionOfPopup(popup); //выравнивание на странице блока popup
     document.body.appendChild(popup);
 
     yes = popup.getElementsByTagName('button')[0];
