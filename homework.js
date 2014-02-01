@@ -1,55 +1,64 @@
-//создает NodeList со ссылками
-var i, link = document.getElementsByClassName('popup-link');
-//Слушатели всех удовлетворяющих ссылок
-for (i = 0; i < link.length; i++) {
-    link[i].addEventListener('click', openPopupFromLink, false);
-    link[i].onclick = function() {
-        return false; //чтобы не переходило сразу на внешнюю ссылку
-    };
+var popup;
+document.addEventListener('click', _onMouseClick, false);
+
+/**
+ * Обработчик клика по ссылке с классом 'popup-link'
+ * @param {Event} e событие клика
+ * @private
+ */
+
+function _onMouseClick(e) {
+    if (e.target.className == 'popup-link') {
+        e.preventDefault();
+        return openPopupFromLink(e.target);
+    }
 }
 
-function openPopupFromLink() {
-    //делаем проверку на существующий popup, если уже открыт то удаляем.
-    if (document.getElementsByClassName('popup')[0]) {
-        document.body.removeChild(document.getElementsByClassName('popup')[0]);
-    }
-    var linkTitle, linkMessage, linkURL, position, yes, no;
-    linkTitle = this.dataset.title;
-    linkMessage = this.dataset.message;
-    linkURL = this.href;
-    //заменяем символ /% на адрес сайта.
-    linkMessage = linkMessage.replace(/%s/g, linkURL);
+/**
+ * Получает данные из ссылки
+ * на основе этих данных создаёт попап (через createPopup) и добавляет его в DOM
+ * @param {HTMLElement} link Ссылка с data-аттрибутами
+ */
 
-    //если нажать "Да"
-    function onConfirm() {
-        return location.assign(linkURL);
-    }
-    //если нажать "Нет"
-    function onReject() {
-        popup.parentNode.removeChild(popup);
+function openPopupFromLink(link) {
+    var linkTitle, linkMessage, linkURL, isCreated;
+    linkTitle = link.dataset.title;
+    linkURL = link.href;
+    linkMessage = link.dataset.message.replace(/%s/g, linkURL);
+
+    function buttonOk() {
+        return location.assign(link);
     }
 
-    popup = createPopup(linkTitle, linkMessage, onConfirm);
-    positionOfPopup(popup); //выравнивание на странице блока popup
-    document.body.appendChild(popup);
-
-    yes = popup.getElementsByTagName('button')[0];
-    no = popup.getElementsByTagName('button')[1];
-
-    yes.onclick = onConfirm;
-    no.onclick = onReject;
-
+    createPopup(linkTitle, linkMessage, buttonOk);
 }
+
+
+/**
+ * Создаёт DOM-узел с сообщением
+ * @param {String} title Заголовок сообщение
+ * @param {String} message Текст сообщения сообщение
+ * @param {Function} onOk Обработчик клика по кнопке 'Да'
+ */
 
 function createPopup(title, message, onOk) {
-    var temp_el = document.createElement('div');
+    var temp;
+    if (popup === undefined) {
+        temp = document.createElement('div');
+        temp.className = 'popup';
+        temp.innerHTML = '<div class="title">' + title + '</div><div class="message">' + message + '</div><div class="btns"> <button>Да</button> <button>Нет</button></div>';
+        document.body.appendChild(temp);
+        popup = document.body.lastChild;
+        popup.style.display = 'block';
 
-    temp_el.innerHTML = '<div class="popup"> <div class="title">' + title + '</div> <div class="message">' + message + '</div> <div class="btns"><button>Да </button> <button>Нет </button></div> </div>';
-    return temp_el.firstChild;
-}
-
-function positionOfPopup(elem) {
-    elem.style.position = 'absolute';
-    elem.style.top = 200 + 'px';
-    elem.style.left = Math.floor(document.clientWidth / 2) - 150 + 'px';
+        popup.getElementsByTagName('button')[0].addEventListener('click', onOk, false);
+        popup.getElementsByTagName('button')[1].addEventListener('click', function() {
+            popup.style.display = 'none';
+        }, false);
+    } else {
+        popup.children[0].innerHTML = title;
+        popup.children[1].innerHTML = message;
+        popup.getElementsByTagName('button')[0].addEventListener('click', onOk, false);
+        popup.style.display = 'block';
+    }
 }

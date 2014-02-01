@@ -6,9 +6,12 @@ body {
 }
 
 .popup {
+  position: absolute;
    width:380px;
+   top: 200px;
    background-color:#FFF;
-   box-shadow: 0 0 20px black
+   box-shadow: 0 0 20px black;
+   display: none;
 }
 .title {
   height:20px;
@@ -22,4 +25,7 @@ body {
 
 .btns {
     text-align: center;
+}
+.btns button {
+  margin: 0 50px;
 }
