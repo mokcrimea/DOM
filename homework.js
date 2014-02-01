@@ -21,16 +21,13 @@ function _onMouseClick(e) {
  */
 
 function openPopupFromLink(link) {
-    var linkTitle, linkMessage, linkURL, isCreated;
-    linkTitle = link.dataset.title;
-    linkURL = link.href;
-    linkMessage = link.dataset.message.replace(/%s/g, linkURL);
-
-    function buttonOk() {
-        return location.assign(link);
-    }
-
-    createPopup(linkTitle, linkMessage, buttonOk);
+    createPopup(
+        link.dataset.title,
+        link.dataset.message.replace(/%s/g, link.href),
+        function() {
+            return location.assign(link);
+        }
+    );
 }
 
 
